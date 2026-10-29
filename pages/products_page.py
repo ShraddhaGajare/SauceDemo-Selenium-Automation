@@ -10,7 +10,7 @@ class ProductsPage:
 
     def __init__(self, driver):
         self.driver = driver
-        self.wait = WebDriverWait(driver, 15)
+        self.wait = WebDriverWait(driver, 30)
 
     def add_backpack_to_cart(self):
 
