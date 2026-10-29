@@ -1,7 +1,9 @@
 
+from builtins import print
 import time
 
 from selenium.webdriver.common.by import By
+from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
@@ -20,21 +22,33 @@ class ProductsPage:
             )
         )
 
+        print("Button visible:", add_button.is_displayed())
+        print("Button enabled:", add_button.is_enabled())
+        print("Button text before click:", add_button.text)
+
+        # Move mouse to button and click
         add_button.click()
+
+        print("Normal Selenium click executed")
+
         time.sleep(3)
 
-        print("Backpack Add to Cart clicked")
+        add_buttons = self.driver.find_elements(
+            By.ID, "add-to-cart-sauce-labs-backpack"
+        )
 
-        # Check whether button changed to Remove
         remove_buttons = self.driver.find_elements(
             By.ID, "remove-sauce-labs-backpack"
         )
 
-        print("Remove button found:", len(remove_buttons) > 0)
+        print("Add button still present:", len(add_buttons) > 0)
+        print("Remove button present:", len(remove_buttons) > 0)
+
+        if add_buttons:
+            print("Button text after click:", add_buttons[0].text)
 
     def get_cart_count(self):
 
-        # Check whether cart badge exists
         badges = self.driver.find_elements(
             By.CLASS_NAME, "shopping_cart_badge"
         )
@@ -45,8 +59,8 @@ class ProductsPage:
             print("Badge text:", repr(badge.text))
             print("Badge visible:", badge.is_displayed())
 
-        # Wait for cart badge containing 1
         def badge_has_one(driver):
+
             badges = driver.find_elements(
                 By.CLASS_NAME, "shopping_cart_badge"
             )
@@ -59,7 +73,7 @@ class ProductsPage:
 
         self.wait.until(
             badge_has_one,
-            "Cart badge did not show 1 within 15 seconds"
+            "Cart badge did not show 1 within 30 seconds"
         )
 
         return "1"
@@ -73,6 +87,7 @@ class ProductsPage:
         )
 
         cart_icon.click()
+
         time.sleep(3)
 
         print("Cart page opened")
