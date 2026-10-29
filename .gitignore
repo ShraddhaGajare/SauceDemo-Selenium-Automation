@@ -3,3 +3,13 @@ __pycache__/
 .venv/
 .env
 *.pyc
+
+# Generated test reports
+reports/
+report.html
+
+# Screenshots captured during testing
+screenshots/
+
+# Intentionally failing demonstration test
+test_screenshot_demo.py
