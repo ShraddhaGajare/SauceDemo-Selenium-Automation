@@ -2,6 +2,7 @@
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import TimeoutException
 
 
 class ProductsPage:
@@ -12,22 +13,49 @@ class ProductsPage:
 
     def add_backpack_to_cart(self):
 
-        # Find the Add to Cart button
         add_button = self.wait.until(
             EC.element_to_be_clickable(
                 (By.ID, "add-to-cart-sauce-labs-backpack")
             )
         )
 
-        # Click Add to Cart
+        print("Add button displayed:", add_button.is_displayed())
+        print("Add button enabled:", add_button.is_enabled())
+
         add_button.click()
 
-        # Verify button changes to Remove
-        remove_button = self.wait.until(
-            EC.visibility_of_element_located(
-                (By.ID, "remove-sauce-labs-backpack")
+        print("Add button clicked")
+
+        try:
+            remove_button = self.wait.until(
+                EC.visibility_of_element_located(
+                    (By.ID, "remove-sauce-labs-backpack")
+                )
             )
-        )
+
+        except TimeoutException:
+            print("ERROR: Remove button did not appear")
+            print("Current URL:", self.driver.current_url)
+
+            add_buttons = self.driver.find_elements(
+                By.ID, "add-to-cart-sauce-labs-backpack"
+            )
+
+            print(
+                "Add button still present:",
+                len(add_buttons) > 0
+            )
+
+            badges = self.driver.find_elements(
+                By.CLASS_NAME, "shopping_cart_badge"
+            )
+
+            print(
+                "Cart badge:",
+                badges[0].text if badges else "Not present"
+            )
+
+            raise
 
         assert remove_button.is_displayed(), (
             "Remove button is not visible"
@@ -37,7 +65,6 @@ class ProductsPage:
 
     def get_cart_count(self):
 
-        # Wait until cart badge displays 1
         badge = self.wait.until(
             EC.visibility_of_element_located(
                 (By.CLASS_NAME, "shopping_cart_badge")
@@ -57,21 +84,55 @@ class ProductsPage:
 
     def open_cart(self):
 
-        # Wait until cart icon is clickable
         cart_icon = self.wait.until(
             EC.element_to_be_clickable(
                 (By.CLASS_NAME, "shopping_cart_link")
             )
         )
 
-        # Open shopping cart
-        cart_icon.click()
+        print("URL before cart click:", self.driver.current_url)
+        print("Cart icon displayed:", cart_icon.is_displayed())
+        print("Cart icon enabled:", cart_icon.is_enabled())
 
-        # Wait until cart page opens
-        self.wait.until(
+        # JavaScript click experiment for headless Chrome
+        self.driver.execute_script(
+            "arguments[0].click();",
+            cart_icon
+        )
+
+        print("Cart icon clicked")
+        print("URL immediately after click:", self.driver.current_url)
+
+        try:
+            self.wait.until(
+                EC.url_contains("/cart.html")
+            )
+
+        except TimeoutException:
+            print("ERROR: Cart page did not open")
+            print("Final URL:", self.driver.current_url)
+
+            cart_titles = self.driver.find_elements(
+                By.CLASS_NAME, "title"
+            )
+
+            if cart_titles:
+                print(
+                    "Current page title:",
+                    cart_titles[0].text
+                )
+
+            raise
+
+        cart_title = self.wait.until(
             EC.visibility_of_element_located(
                 (By.CLASS_NAME, "title")
             )
         )
 
-        print("Cart page opened")
+        assert cart_title.text == "Your Cart", (
+            "Cart page did not open correctly"
+        )
+
+        print("Cart page opened successfully")
+        print("Current URL:", self.driver.current_url)

@@ -2,6 +2,7 @@
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import TimeoutException
 
 
 class CheckoutPage:
@@ -18,14 +19,40 @@ class CheckoutPage:
             )
         )
 
-        checkout_button.click()
+        print("URL before checkout:", self.driver.current_url)
+        print("Checkout displayed:", checkout_button.is_displayed())
+        print("Checkout enabled:", checkout_button.is_enabled())
 
-        # Wait for checkout information page
-        self.wait.until(
-            EC.visibility_of_element_located(
-                (By.ID, "first-name")
-            )
+        # JavaScript click experiment for headless Chrome
+        self.driver.execute_script(
+            "arguments[0].click();",
+            checkout_button
         )
+
+        print("Checkout button clicked")
+        print("URL after click:", self.driver.current_url)
+
+        try:
+            self.wait.until(
+                EC.visibility_of_element_located(
+                    (By.ID, "first-name")
+                )
+            )
+
+        except TimeoutException:
+            print("ERROR: Checkout information page did not open")
+            print("Current URL:", self.driver.current_url)
+
+            checkout_buttons = self.driver.find_elements(
+                By.ID, "checkout"
+            )
+
+            print(
+                "Checkout button still present:",
+                len(checkout_buttons) > 0
+            )
+
+            raise
 
         print("Checkout page opened")
 
@@ -42,13 +69,11 @@ class CheckoutPage:
         last_name_field = self.driver.find_element(
             By.ID, "last-name"
         )
-
         last_name_field.send_keys(last_name)
 
         postal_code_field = self.driver.find_element(
             By.ID, "postal-code"
         )
-
         postal_code_field.send_keys(postal_code)
 
         print("Customer details entered")
@@ -63,7 +88,6 @@ class CheckoutPage:
 
         continue_button.click()
 
-        # Wait for checkout overview page
         self.wait.until(
             EC.visibility_of_element_located(
                 (By.ID, "finish")
@@ -92,7 +116,6 @@ class CheckoutPage:
 
         finish_button.click()
 
-        # Wait for order confirmation
         self.wait.until(
             EC.visibility_of_element_located(
                 (By.CLASS_NAME, "complete-header")
@@ -110,3 +133,4 @@ class CheckoutPage:
         )
 
         return confirmation.text
+
