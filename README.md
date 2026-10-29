@@ -1,14 +1,14 @@
 # SauceDemo Selenium Automation Testing
 
-A web automation testing project developed using **Python, Selenium WebDriver, Pytest, and Page Object Model (POM)**.
+An automated web application testing project developed using **Python, Selenium WebDriver, Pytest, and Page Object Model (POM)**.
 
-This project demonstrates automated functional testing of an e-commerce application, including login, shopping cart, and checkout workflows.
+This project demonstrates functional UI testing, data-driven testing, end-to-end checkout automation, HTML reporting, and CI/CD integration using GitHub Actions.
 
 ## Application Under Test
 
 **Website:** https://www.saucedemo.com/
 
-SauceDemo is a demo e-commerce website used for practicing software testing and automation.
+SauceDemo is a demo e-commerce application used for practicing software testing and automation.
 
 ## Technologies Used
 
@@ -16,119 +16,146 @@ SauceDemo is a demo e-commerce website used for practicing software testing and 
 - Selenium WebDriver
 - Pytest
 - Page Object Model (POM)
-- Google Chrome
-- pytest-html
+- Google Chrome (Headless and Visible Mode)
+- Pytest HTML Reporting
 - Git and GitHub
 - GitHub Actions (CI/CD)
 
 ## Automated Test Scenarios
 
-| Test Scenario | Description |
+| Test Case | Description |
 |---|---|
-| Login UI Verification | Verify login fields are displayed |
-| Valid Login | Verify login with valid credentials |
-| Empty Password | Verify validation for an empty password |
-| Add to Cart | Verify adding a product to the shopping cart |
-| Remove from Cart | Verify removing a product from the cart |
-| Complete Checkout | Verify the end-to-end checkout workflow |
-| POM Login | Verify login using Page Object Model |
-| POM Add to Cart | Verify cart functionality using POM |
-| POM Remove from Cart | Verify product removal using POM |
-| POM Checkout | Verify checkout using POM |
+| POM Login | Verify successful login using valid credentials |
+| Add to Cart | Add Sauce Labs Backpack and verify the cart |
+| Remove from Cart | Remove a product and verify the cart is empty |
+| Complete Checkout | Verify the end-to-end checkout workflow and order confirmation |
+| Data-Driven Login 1 | Verify successful login with valid credentials |
+| Data-Driven Login 2 | Verify error handling for invalid username and password |
+| Data-Driven Login 3 | Verify validation when username is empty |
+| Data-Driven Login 4 | Verify validation when password is empty |
+
+**Total automated tests: 8**
 
 ## Project Structure
 
 ```text
 saucedemo-automation/
-│
-├── .github/
-│   └── workflows/
-│       └── selenium-tests.yml
-│
-├── pages/
-│   ├── login_page.py
-│   ├── products_page.py
-│   ├── cart_page.py
-│   └── checkout_page.py
-│
-├── conftest.py
-├── test_pom_login.py
-├── test_pom_cart.py
-├── test_pom_remove_cart.py
-├── test_pom_checkout.py
-├── requirements.txt
-├── .gitignore
-└── README.md
+|
++-- .github/
+|   +-- workflows/
+|       +-- selenium-tests.yml
+|
++-- pages/
+|   +-- login_page.py
+|   +-- products_page.py
+|   +-- cart_page.py
+|   +-- checkout_page.py
+|
++-- conftest.py
++-- test_pom_login.py
++-- test_pom_cart.py
++-- test_pom_remove_cart.py
++-- test_pom_checkout.py
++-- test_data_driven_login.py
++-- requirements.txt
++-- .gitignore
++-- README.md
 ```
 
 ## How to Run the Tests
 
-**1. Clone the repository**
+### 1. Clone the Repository
 
 ```bash
 git clone https://github.com/ShraddhaGajare/SauceDemo-Selenium-Automation.git
 ```
 
-**2. Navigate to the project directory**
+### 2. Navigate to the Project
 
 ```bash
 cd SauceDemo-Selenium-Automation
 ```
 
-**3. Install dependencies**
+### 3. Install Dependencies
 
 ```bash
 python -m pip install -r requirements.txt
 ```
 
-**4. Run the POM test suite**
+### 4. Run All 8 Automated Tests
 
 ```bash
-python -m pytest test_pom_login.py test_pom_cart.py test_pom_checkout.py -v -s
+python -m pytest test_pom_login.py test_pom_cart.py test_pom_remove_cart.py test_pom_checkout.py test_data_driven_login.py -v -s
 ```
 
-**5. Generate an HTML test report**
+### 5. Generate an HTML Test Report
 
 ```bash
-python -m pytest test_pom_login.py test_pom_cart.py test_pom_checkout.py -v -s --html=report.html --self-contained-html
+python -m pytest test_pom_login.py test_pom_cart.py test_pom_remove_cart.py test_pom_checkout.py test_data_driven_login.py -v -s --html=report.html --self-contained-html
 ```
 
-## Test Reporting
+## Framework Features
 
-The framework supports:
-
+- Page Object Model for reusable page interactions.
+- Pytest fixtures for browser setup and teardown.
+- Explicit waits for handling dynamic web elements.
+- Data-driven login testing using multiple input combinations.
+- Headless Chrome execution for CI environments.
+- Automatic screenshot capture on test failures.
 - HTML reports using pytest-html.
-- Automatic screenshot capture when a test fails.
-- Screenshot attachments in HTML reports.
-- Combined reports for multiple test cases.
-
-Generated reports and screenshots are excluded from Git tracking.
+- GitHub Actions for automated test execution.
 
 ## Continuous Integration Using GitHub Actions
 
-This project uses **GitHub Actions** to execute Selenium tests automatically whenever changes are pushed to the `main` branch.
+The project includes a GitHub Actions workflow that executes Selenium automation tests when changes are pushed to the `main` branch.
 
 The workflow:
 
 1. Checks out the GitHub repository.
-2. Sets up Python.
-3. Installs dependencies.
-4. Runs Selenium tests using headless Chrome.
-5. Generates an HTML report.
+2. Configures Python.
+3. Installs project dependencies.
+4. Executes Selenium tests using headless Chrome.
+5. Generates an HTML test report.
 6. Uploads the report as a downloadable artifact.
 
-**Latest verified CI execution:** 3 passed, 0 failed.
+**Verified GitHub Actions Execution**
+
+| Metric | Result |
+|---|---|
+| Environment | Ubuntu Linux |
+| Python Version | 3.12.15 |
+| Test Framework | Pytest 9.2.0 |
+| Browser | Headless Chrome |
+| Total Tests | 8 |
+| Passed | 8 |
+| Failed | 0 |
+| Execution Time | 33.51 seconds |
+
+**GitHub Actions:** https://github.com/ShraddhaGajare/SauceDemo-Selenium-Automation/actions
+
+## Test Reporting
+
+The automation framework generates HTML reports using pytest-html.
+
+When a test fails, the framework captures a browser screenshot and attaches it to the test report.
+
+GitHub Actions uploads the generated HTML report as an artifact named `selenium-html-report`.
 
 ## Key Learning Outcomes
 
-- Designing automated test cases for web applications.
-- Working with Selenium WebDriver and browser elements.
-- Organizing automation using Page Object Model.
-- Using Pytest fixtures for browser setup and teardown.
-- Capturing screenshots for failed tests.
-- Generating HTML test reports.
-- Implementing CI using GitHub Actions.
+Through this project, I gained practical experience in:
+
+- Writing and executing automated UI test cases.
+- Implementing Selenium WebDriver using Python.
+- Designing reusable Page Object Model classes.
+- Creating data-driven tests with Pytest.
+- Using explicit waits for web element synchronization.
+- Validating shopping cart and checkout workflows.
+- Capturing screenshots and generating HTML reports.
+- Managing automation code using Git and GitHub.
+- Configuring CI/CD test execution using GitHub Actions.
+- Debugging Selenium tests in headless Chrome.
 
 ## Project Purpose
 
-This project was developed as a practical learning and portfolio project to demonstrate foundational Software QA and Test Automation skills.
+This project was developed as a hands-on QA automation learning and portfolio project to demonstrate practical skills in **Software Testing, Selenium Python Automation, Pytest, POM, and CI/CD**.
