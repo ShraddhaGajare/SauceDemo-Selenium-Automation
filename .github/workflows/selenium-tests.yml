@@ -25,11 +25,11 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install -r requirements.txt
 
-      - name: Run Selenium tests
+      - name: Run Selenium POM tests
         env:
           GITHUB_ACTIONS: "true"
         run: |
-          python -m pytest test_pom_login.py -v -s --html=report.html --self-contained-html
+          python -m pytest test_pom_login.py test_pom_cart.py test_pom_checkout.py -v -s --html=report.html --self-contained-html
 
       - name: Upload HTML report
         if: always()
