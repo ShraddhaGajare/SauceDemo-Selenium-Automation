@@ -20,19 +20,16 @@ jobs:
         with:
           python-version: "3.12"
 
-     
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
+
       - name: Run Selenium POM and Data-Driven Tests
         env:
           GITHUB_ACTIONS: "true"
         run: |
           python -m pytest test_pom_login.py test_pom_cart.py test_pom_checkout.py test_data_driven_login.py -v -s --html=report.html --self-contained-html
-
-
-      - name: Run Selenium POM tests
-        env:
-          GITHUB_ACTIONS: "true"
-        run: |
-          python -m pytest test_pom_login.py test_pom_cart.py test_pom_checkout.py -v -s --html=report.html --self-contained-html
 
       - name: Upload HTML report
         if: always()
