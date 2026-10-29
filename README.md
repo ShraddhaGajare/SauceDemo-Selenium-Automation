@@ -1,5 +1,7 @@
 # SauceDemo Selenium Automation Testing
 
+![Selenium Tests](https://github.com/ShraddhaGajare/SauceDemo-Selenium-Automation/actions/workflows/selenium-tests.yml/badge.svg)
+
 An automated web application testing project developed using **Python, Selenium WebDriver, Pytest, and Page Object Model (POM)**.
 
 This project demonstrates functional UI testing, data-driven testing, end-to-end checkout automation, HTML reporting, and CI/CD integration using GitHub Actions.
