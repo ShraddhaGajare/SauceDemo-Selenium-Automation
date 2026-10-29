@@ -1,6 +1,4 @@
 
-import time
-
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -21,7 +19,13 @@ class CheckoutPage:
         )
 
         checkout_button.click()
-        time.sleep(2)
+
+        # Wait for checkout information page
+        self.wait.until(
+            EC.visibility_of_element_located(
+                (By.ID, "first-name")
+            )
+        )
 
         print("Checkout page opened")
 
@@ -34,21 +38,18 @@ class CheckoutPage:
         )
 
         first_name_field.send_keys(first_name)
-        time.sleep(2)
 
         last_name_field = self.driver.find_element(
             By.ID, "last-name"
         )
 
         last_name_field.send_keys(last_name)
-        time.sleep(2)
 
         postal_code_field = self.driver.find_element(
             By.ID, "postal-code"
         )
 
         postal_code_field.send_keys(postal_code)
-        time.sleep(2)
 
         print("Customer details entered")
 
@@ -61,7 +62,13 @@ class CheckoutPage:
         )
 
         continue_button.click()
-        time.sleep(2)
+
+        # Wait for checkout overview page
+        self.wait.until(
+            EC.visibility_of_element_located(
+                (By.ID, "finish")
+            )
+        )
 
         print("Checkout overview opened")
 
@@ -84,7 +91,13 @@ class CheckoutPage:
         )
 
         finish_button.click()
-        time.sleep(3)
+
+        # Wait for order confirmation
+        self.wait.until(
+            EC.visibility_of_element_located(
+                (By.CLASS_NAME, "complete-header")
+            )
+        )
 
         print("Finish button clicked")
 
